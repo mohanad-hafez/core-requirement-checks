@@ -12,8 +12,7 @@ jobs:
     timeout-minutes: 5
     permissions:
       contents: read
-      pull-requests: read
-      issues: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
@@ -34,11 +33,14 @@ jobs:
             if(verdicts.repo_public.status!=='pass'||verdicts.pr_link.status!=='pass')throw Error('Unexpected result; inspect before publication');
             const target=await github.rest.pulls.get({...context.repo,pull_number:1});if(target.data.state!=='open'||target.data.head.sha!=='17f5c3b1c012b27395c131b7a0cf9df9618dfe1a')throw Error('Target changed');
             const body='## Dependency link checks\n\n| Package | Repository public | PR link |\n| --- | --- | --- |\n| aiolibresync 0.5.1 → 0.5.2 | '+verdicts.repo_public.icon+' | '+verdicts.pr_link.icon+' |\n\nRepository: https://github.com/drsound/aiolibresync\n\nChecks use the recorded PR description at source head 88c1006. Security, release and async behavior are outside this result.';
+            fs.writeFileSync('requirements-prepublication.json',JSON.stringify({verdicts,observed,body,delivery:'not_attempted',model_calls:0},null,2));
             const comment=await github.rest.issues.createComment({...context.repo,issue_number:1,body});
             fs.writeFileSync('requirements-result.json',JSON.stringify({verdicts,observed,comment:{id:comment.data.id,url:comment.data.html_url,body},source_head:original.head.sha,model_calls:0},null,2));
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
           name: requirements-result
-          path: requirements-result.json
+          path: |
+            requirements-result.json
+            requirements-prepublication.json
           retention-days: 14
