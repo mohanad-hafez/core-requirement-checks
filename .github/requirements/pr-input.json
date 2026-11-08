@@ -1,0 +1,46 @@
+{
+  "additions": 200,
+  "base": {
+    "ref": "dev",
+    "repo": {
+      "description": ":house_with_garden: Open source home automation that puts local control and privacy first.",
+      "full_name": "home-assistant/core"
+    },
+    "sha": "743cffc59bb28d22d691f303e2dcf45263236c3f"
+  },
+  "body": "\n## Proposed change\n\nThe newer Platin hubs, the Stereo Hub HT and the Surround Hub, are built on Libre&#39;s LS10 module. Their SSDP description matches the LibreSync matchers and their control port answers, so 2026.11 discovers them and lets the user add them. But their port 7777 does not accept the integration&#39;s plaintext session (on the Surround Hub it is TLS with a client certificate), so `async_connect` never succeeds and the entry stays in &#34;retrying setup&#34; for ever.\n\nThis PR tells the two generations apart before connecting. aiolibresync 0.5.2 adds `async_query_lssdp`, which asks the hub on Libre&#39;s own discovery port (UDP 1800), and the reply names the module: `LS9` on the original Stereo Hub, `LS10` on the newer ones.\n\n- Both config flows abort with `unsupported_hub` when the hub reports LS10.\n- An entry added with 2026.11 on such a hub fails setup with a translated `ConfigEntryError` instead of retrying.\n- The LSSDP query runs alongside the connection in setup and alongside the probe in the flows, so a hub that is down, or a mistyped address, waits no longer than before.\n- A hub that does not answer on LSSDP is treated as unknown and handled as before.\n\nThis refusal is a stopgap, not the end state for these hubs. We are working with owners of both models to add support (drsound/ha-libresync#2 for the Stereo Hub HT, drsound/ha-libresync#3 for the Surround Hub). They have captured and tested the control protocol on their own hubs, and from their findings the companion custom integration has beta builds that run the LS10 hubs on port 50006 alone (source and power), now waiting for the owners to confirm them on their hardware. Once confirmed, that support will come to core as a follow-up PR, and the full feature set will follow as port 7777 over TLS is worked out with them.\n\n## Type of change\n\n\n- [ ] Dependency upgrade\n- [x] Bugfix (non-breaking change which fixes an issue)\n- [ ] New integration (thank you!)\n- [ ] New feature (which adds functionality to an existing integration)\n- [ ] Deprecation (breaking change to happen in the future)\n- [ ] Breaking change (fix/feature causing existing functionality to break)\n- [ ] Code quality improvements to existing code or addition of tests\n\n## Additional information\n\n\n- This PR fixes or closes issue: fixes #\n- This PR is related to issue: https://github.com/drsound/ha-libresync/issues/2, https://github.com/drsound/ha-libresync/issues/3\n- Link to documentation pull request: \n- Link to contributors documentation pull request: \n- Link to frontend pull request: \n\nDependency: aiolibresync 0.5.1 → 0.5.2, [diff](https://github.com/drsound/aiolibresync/compare/v0.5.1...v0.5.2), [release notes](https://github.com/drsound/aiolibresync/releases/tag/v0.5.2). It adds `async_query_lssdp` and `LssdpInfo`, backported unchanged from the 0.6 betas, and nothing else.\n\n## Checklist\n\n\n- [x] I understand the code I am submitting and can explain how it works.\n- [x] The code change is tested and works locally.\n- [x] Local tests pass. **Your PR cannot be merged unless tests pass**\n- [x] There is no commented out code in this PR.\n- [x] I have followed the [development checklist][dev-checklist]\n- [x] I have followed the [perfect PR recommendations][perfect-pr]\n- [x] The code has been formatted using Ruff (`ruff format homeassistant tests`)\n- [x] Tests have been added to verify that the new code works.\n- [x] Any generated code has been carefully reviewed for correctness and compliance with project standards.\n\nIf user exposed functionality or configuration variables are added/changed:\n\n- [x] Documentation added/updated for [www.home-assistant.io][docs-repository]\n\nIf the code communicates with devices, web services, or third-party tools:\n\n- [x] The [manifest file][manifest-docs] has all fields filled out correctly.  \n      Updated and included derived files by running: `python3 -m script.hassfest`.\n- [x] New or updated dependencies have been added to `requirements_all.txt`.  \n      Updated by running `python3 -m script.gen_requirements_all`.\n- [x] For the updated dependencies a diff between library versions and ideally a link to the changelog/release notes is added to the PR description.\n\n\n\nTo help with the load of incoming pull requests:\n\n- [ ] I have reviewed two other [open pull requests][prs] in this repository.\n\n[prs]: https://github.com/home-assistant/core/pulls?q=is%3Aopen+is%3Apr+-author%3A%40me+-draft%3Atrue+-label%3Awaiting-for-upstream+sort%3Acreated-desc+review%3Anone+-status%3Afailure\n\n\n[dev-checklist]: https://contributors.home-assistant.io/core/development/checklist/\n[manifest-docs]: https://contributors.home-assistant.io/core/integrations/manifest/\n[quality-scale]: https://contributors.home-assistant.io/core/quality-scale/\n[docs-repository]: https://github.com/home-assistant/home-assistant.io\n[perfect-pr]: https://contributors.home-assistant.io/start/pull-requests/#before-you-open-it\n",
+  "changed_files": 9,
+  "commits": 1,
+  "created_at": "2026-11-08T18:16:57Z",
+  "deletions": 21,
+  "draft": false,
+  "head": {
+    "ref": "libresync-ls10",
+    "repo": {
+      "description": ":house_with_garden: Open source home automation that puts local control and privacy first.",
+      "full_name": "drsound/core"
+    },
+    "sha": "88c10069354d3ff2706c6b985329f936c512f54e"
+  },
+  "html_url": "https://github.com/home-assistant/core/pull/191309",
+  "labels": [
+    "cla-signed",
+    "has-tests",
+    "by-code-owner",
+    "bugfix",
+    "Quality Scale: bronze",
+    "integration: libresync"
+  ],
+  "mergeable_state": "blocked",
+  "merged": false,
+  "number": 191309,
+  "state": "open",
+  "title": "Refuse LibreSync hubs built on the LS10 module",
+  "updated_at": "2026-11-08T18:20:19Z",
+  "user": {
+    "avatar_url": "https://avatars.githubusercontent.com/u/471234?v=4",
+    "id": 471234,
+    "login": "drsound",
+    "profile_url": "https://github.com/drsound"
+  }
+}

@@ -1,0 +1,10 @@
+const { test } = require("node:test");
+const assert = require("node:assert/strict");
+const { linkVerdict, publicVerdict } = require("./requirements_links.cjs");
+const pkg = { repo_url: "https://github.com/drsound/aiolibresync", old_version: "0.5.1", new_version: "0.5.2" };
+test("actual compare link meets both-version rule", () => assert.equal(linkVerdict(pkg, "[diff](https://github.com/drsound/aiolibresync/compare/v0.5.1...v0.5.2),").status, "pass"));
+test("new package requires exact repository path prefix", () => assert.equal(linkVerdict({ ...pkg, old_version: null }, "https://github.com/drsound/aiolibresync-extra").status, "fail"));
+test("another host and PyPI do not meet source requirement", () => assert.equal(linkVerdict(pkg, "https://pypi.org/project/aiolibresync/0.5.1?new=0.5.2").status, "fail"));
+test("partial numeric version is not a version match", () => assert.equal(linkVerdict(pkg, "https://github.com/drsound/aiolibresync/compare/0.5.10...0.5.2").status, "fail"));
+test("login redirect is not public reachability", () => assert.equal(publicVerdict(pkg.repo_url, { status: 200, final_url: "https://github.com/login", public_metadata: false }).status, "fail"));
+test("public page plus unauthenticated public metadata passes", () => assert.equal(publicVerdict(pkg.repo_url, { status: 200, final_url: pkg.repo_url, public_metadata: true }).status, "pass"));

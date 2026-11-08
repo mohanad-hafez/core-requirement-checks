@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "pr_number": 191309,
+  "skip_aw": false,
+  "head_sha": "88c10069354d3ff2706c6b985329f936c512f54e",
+  "needs_agent": true,
+  "packages": [
+    {
+      "name": "aiolibresync",
+      "old_version": "0.5.1",
+      "new_version": "0.5.2",
+      "repo_url": "https://github.com/drsound/aiolibresync",
+      "publisher_kind": "GitHub",
+      "checks": {
+        "yanked": {
+          "status": "pass",
+          "details": "Version 0.5.2 is a live (non-yanked) release."
+        },
+        "vulnerabilities": {
+          "status": "pass",
+          "details": "No active advisories reported by PyPI for version 0.5.2."
+        },
+        "ci_upload": {
+          "status": "pass",
+          "details": "Trusted Publisher attestation found (GitHub)."
+        },
+        "release_pipeline": {
+          "status": "pass",
+          "details": "OIDC via Trusted Publisher attestation (GitHub); automated CI upload verified by PyPI."
+        },
+        "repo_public": {
+          "status": "needs_agent",
+          "details": "Reachability of the source repository must be verified by the agent."
+        },
+        "pr_link": {
+          "status": "needs_agent",
+          "details": "Presence of the required link in the PR description must be verified by the agent."
+        },
+        "security": {
+          "status": "needs_agent",
+          "details": "Baseline supply-chain source scan must be performed by the agent."
+        },
+        "async_blocking": {
+          "status": "needs_agent",
+          "details": "Version bump 0.5.1 → 0.5.2: agent must review only the diff for newly introduced blocking I/O inside async functions."
+        }
+      },
+      "needs_agent": true
+    }
+  ],
+  "rendered_comment": "<!-- requirements-check -->\n## Check requirements\n\nChecked at commit [`88c1006`](https://github.com/home-assistant/core/commit/88c10069354d3ff2706c6b985329f936c512f54e).\n\n{{SUMMARY}}\n\n| Package | Old | New | No Advisories | Not Yanked | Repo Public | CI Upload | Release Pipeline | Security | PR Link | Async Safe |\n|---|---|---|---|---|---|---|---|---|---|---|\n| aiolibresync | 0.5.1 | 0.5.2 | ✅ | ✅ | {{CHECK_CELL:aiolibresync:repo_public}} | ✅ | ✅ | {{CHECK_CELL:aiolibresync:security}} | {{CHECK_CELL:aiolibresync:pr_link}} | {{CHECK_CELL:aiolibresync:async_blocking}} |\n\n<details open>\n<summary><strong>📦 aiolibresync: 0.5.1 → 0.5.2</strong></summary>\n\n- **No Advisories**: ✅ No active advisories reported by PyPI for version 0.5.2.\n- **Not Yanked**: ✅ Version 0.5.2 is a live (non-yanked) release.\n- **Repo Public**: {{CHECK_DETAIL:aiolibresync:repo_public}}\n- **CI Upload**: ✅ Trusted Publisher attestation found (GitHub).\n- **Release Pipeline**: ✅ OIDC via Trusted Publisher attestation (GitHub); automated CI upload verified by PyPI.\n- **Security**: {{CHECK_DETAIL:aiolibresync:security}}\n- **PR Link**: {{CHECK_DETAIL:aiolibresync:pr_link}}\n- **Async Safe**: {{CHECK_DETAIL:aiolibresync:async_blocking}}\n\n</details>"
+}
